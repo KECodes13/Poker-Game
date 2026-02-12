@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title> Texas Hold'em Poker Simulator</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE-edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <style>.result-box {
+    background: rgba(0, 0, 0, 0.7);
+    color: #00ffcc;
+    font-family: 'Courier New', monospace;
+    border: 2px solid #00ffcc;
+    border-radius: 12px;
+    padding: 10px 15px;
+    margin: 10px auto;
+    width: fit-content;
+    text-align: center;
+    box-shadow: 0 0 15px rgba(0, 255, 204, 0.5);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+}
+
+.result-box:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(0, 255, 204, 0.8);
+}
+    </style>
+</head>
+
+<body style="background-image: url('/images/how-to-play-poker-copy.avif');">
+
+<h1> Welcome to the Texas Hold'em Poker Simulator! </h1>
+<p>
+
+    This is a <b>Texas Hold'em Poker Hand Simulator</b>. It is here to help
+    learn about all the possible hands in poker, and teach newer players
+    the strength of each of these hands.
+    If you have never played texas hold'em before, here are some
+    basic rules of the game: <a href="https://bicyclecards.com/how-to-play/texas-holdem-poker"
+                                target="_blank">Rules</a>
+</p>
+
+
+<button onclick="playPoker()"> Deal Me!</button>
+<div id="output"></div>
+
+<script>
+    async function playPoker() {
+        const output = document.getElementById("output");
+        output.innerHTML = "<p>Dealing cards...</p>";
+
+        try {
+            const response = await fetch("/play");
+            const text = await response.text();
+
+            // Split backend response into lines
+            const lines = text.trim().split("\n");
+
+            output.innerHTML = ""; // clear “dealing...” message
+
+            // Show each line one by one
+            for (let i = 0; i < lines.length; i++) {
+                output.innerHTML += `<p>${lines[i]}</p>`;
+                await new Promise(resolve => setTimeout(resolve, 1500)); // delay 1.5 seconds between lines
+            }
+        } catch (error) {
+            output.innerHTML = "<p style='color:red;'>Error: could not connect to the server.</p>";
+            console.error(error);
+        }
+    }
+
+</script>
+
+</body>
+
+</html>
